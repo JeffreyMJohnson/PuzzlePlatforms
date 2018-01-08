@@ -21,5 +21,16 @@ public:
 	
 protected:
 	UPROPERTY(EditAnywhere)
-	float Speed = 5.0f;
+	float MoveSpeed = 5.0f;
+
+	UPROPERTY(EditAnywhere, Meta = (MakeEditWidget = true))
+	FVector TargetLocation;
+
+	UPROPERTY()
+	FVector MoveDirection;
+
+private:
+	FVector PlatformStartLocation;
+	FVector TargetStartLocation;
+	float TotalTravelDistance;
 };

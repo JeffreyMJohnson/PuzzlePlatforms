@@ -11,6 +11,11 @@ AMovingPlatform::AMovingPlatform()
 void AMovingPlatform::BeginPlay()
 {
 	Super::BeginPlay();
+
+	PlatformStartLocation = GetActorLocation();
+	TargetStartLocation = GetTransform().TransformPosition(TargetLocation);
+	TotalTravelDistance = (TargetStartLocation - PlatformStartLocation).Size();
+
 	if (HasAuthority())
 	{
 		SetReplicates(true);
@@ -24,9 +29,21 @@ void AMovingPlatform::Tick(float DeltaSeconds)
 	
 	if (HasAuthority())
 	{
-	FVector NewLocation = GetActorLocation();
-	NewLocation += FVector(Speed * DeltaSeconds, 0, 0);
-	SetActorLocation(NewLocation);
-	}
+		if ((PlatformStartLocation - GetActorLocation()).Size() > TotalTravelDistance)
+		{
+			//move actor to the target location
+			SetActorLocation(TargetStartLocation);
 
+			//swap target and start
+			FVector Temp = PlatformStartLocation;
+			PlatformStartLocation = TargetStartLocation;
+			TargetStartLocation = Temp;
+		}
+
+		FVector NewLocation = GetActorLocation();
+		MoveDirection = (TargetStartLocation - PlatformStartLocation).GetSafeNormal();
+
+		NewLocation += MoveDirection * MoveSpeed * DeltaSeconds;
+		SetActorLocation(NewLocation);
+	}
 }
