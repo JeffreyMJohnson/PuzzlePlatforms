@@ -27,7 +27,9 @@ void AMovingPlatform::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	
-	if (HasAuthority())
+	bool bIsActive = ActiveTriggers > 0;
+
+	if (bIsActive && HasAuthority())
 	{
 		if ((PlatformStartLocation - GetActorLocation()).Size() > TotalTravelDistance)
 		{
@@ -46,4 +48,18 @@ void AMovingPlatform::Tick(float DeltaSeconds)
 		NewLocation += MoveDirection * MoveSpeed * DeltaSeconds;
 		SetActorLocation(NewLocation);
 	}
+}
+
+void AMovingPlatform::AddActiveTrigger()
+{
+	ActiveTriggers++;
+}
+
+void AMovingPlatform::RemoveActiveTrigger()
+{
+	if(ActiveTriggers > 0)
+	{
+		ActiveTriggers--;
+	}
+	
 }

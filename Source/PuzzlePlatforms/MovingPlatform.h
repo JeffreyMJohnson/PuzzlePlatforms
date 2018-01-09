@@ -18,6 +18,9 @@ public:
 	AMovingPlatform();
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
+
+	void AddActiveTrigger();
+	void RemoveActiveTrigger();
 	
 protected:
 	UPROPERTY(EditAnywhere)
@@ -33,4 +36,7 @@ private:
 	FVector PlatformStartLocation;
 	FVector TargetStartLocation;
 	float TotalTravelDistance;
+
+	UPROPERTY( EditAnywhere )
+	int ActiveTriggers = 1;
 };
