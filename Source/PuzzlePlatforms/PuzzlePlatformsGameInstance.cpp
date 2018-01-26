@@ -24,6 +24,11 @@ void UPuzzlePlatformsGameInstance::Host()
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Hosting..."));
+		
+		if (UWorld* World = GetWorld())
+		{
+			World->ServerTravel(TEXT("/Game/ThirdPersonCPP/Maps/ThirdPersonExampleMap?listen"), true, false);
+		}
 	}
 		
 }
@@ -33,5 +38,13 @@ void UPuzzlePlatformsGameInstance::Connect(FString Address)
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Connecting to %s"), *Address));
+
+		UWorld* World = GetWorld();
+		if (!ensure(World)) return;
+
+		if (APlayerController* PC = World->GetFirstPlayerController())
+		{
+			PC->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
+		}
 	}
 }
